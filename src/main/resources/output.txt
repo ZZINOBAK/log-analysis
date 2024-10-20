@@ -1,0 +1,28 @@
+최대호출 APIKEY
+
+wejf
+
+상태코드 별 횟수
+
+10 : 76
+200 : 2377
+404 : 47
+
+상위 3개의 API ServiceID와 각각의 요청 수
+
+blog : 415
+news : 402
+knowledge : 397
+
+피크 시간대
+
+2009-06-10 09:52:49
+
+웹 브라우저 별 사용비율
+
+IE : 85.0
+Firefox : 6.9
+Opera : 3.5
+Chrome : 2.8
+Safari : 1.8
+
