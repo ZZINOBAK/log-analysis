@@ -1,28 +1,28 @@
 최대호출 APIKEY
 
-23jf
+2jdc
 
 상태코드 별 횟수
 
-10 : 62
-200 : 1896
-404 : 42
+10 : 152
+200 : 4742
+404 : 101
 
 상위 3개의 API ServiceID와 각각의 요청 수
 
-knowledge : 338
-news : 336
-blog : 330
+knowledge : 834
+news : 833
+blog : 826
 
 피크 시간대
 
-2009-06-10 08:28:55
+2009-06-10 09:52:49
 
 웹 브라우저 별 사용비율
 
-IE : 85.5
+IE : 85.3
 Firefox : 6.7
-Opera : 3.4
+Opera : 3.1
 Chrome : 2.8
-Safari : 1.7
+Safari : 2.0
 

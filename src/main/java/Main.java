@@ -8,12 +8,11 @@ public class Main {
         LogAnalyzer logAnalyzer = new LogAnalyzer("src/main/resources/input.txt",
                 "src/main/resources/output.txt");
 
-        logAnalyzer.readAndParseLog();
-        logAnalyzer.readAndParseLog();
-        logAnalyzer.readAndParseLog();
-        logAnalyzer.readAndParseLog();
-        logAnalyzer.readAndParseLog();
-
+        int logAmount = 5;
+        while (logAmount > 0) {
+            logAnalyzer.readAndParseLog();
+            logAmount--;
+        }
         logAnalyzer.analyzeLogData();
 
         logAnalyzer.close();
