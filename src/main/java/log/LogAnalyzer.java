@@ -16,10 +16,10 @@ public class LogAnalyzer {
     private final LogData<Date> dateMap = new LogData<>();
     private final LogData<String> browserMap = new LogData<>();
 
-   private final LogParser logParser = new LogParser(apiKeyMap, statusMap, serviceIdMap,
-           dateMap, browserMap);
+    private final LogParser logParser = new LogParser(apiKeyMap, statusMap, serviceIdMap,
+            dateMap, browserMap);
 
-    public LogAnalyzer(String ipFilePath, String opFilePath) throws IOException, ParseException {
+    public LogAnalyzer(String ipFilePath, String opFilePath) throws IOException {
         this.logReader = new LogReader(ipFilePath);
         this.logWriter = new LogWriter(opFilePath);
     }

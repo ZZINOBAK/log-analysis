@@ -35,10 +35,9 @@ public class LogParser {
 
     }
 
-    private LogData<Date> putDate(String[] split) throws ParseException {
+    private void putDate(String[] split) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         dateMap.putLogParserMap(dateFormat.parse(split[3].replace("]", "").trim()));
-        return dateMap;
     }
 
     private void putBrowserType(String[] split) {
