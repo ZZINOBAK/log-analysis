@@ -1,6 +1,7 @@
 package log;
 
 import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -8,8 +9,8 @@ import java.util.Map;
 public class LogWriter {
     private final BufferedWriter fw;
 
-    public LogWriter(BufferedWriter fw) {
-        this.fw = fw;
+    public LogWriter(String opFilePath) throws IOException {
+        this.fw = new BufferedWriter(new FileWriter(opFilePath));
     }
 
     public void writeMostApiKey(String mostApiKey) throws IOException {

@@ -6,22 +6,37 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class LogService {
+public class LogAnalyzer {
     private final LogReader logReader;
     private final LogWriter logWriter;
 
-    public LogService(LogReader logReader, LogWriter logWriter) {
-        this.logReader = logReader;
-        this.logWriter = logWriter;
+    private final LogData<String> apiKeyMap = new LogData<>();
+    private final LogData<Integer> statusMap = new LogData<>();
+    private final LogData<String> serviceIdMap = new LogData<>();
+    private final LogData<Date> dateMap = new LogData<>();
+    private final LogData<String> browserMap = new LogData<>();
+
+   private final LogParser logParser = new LogParser(apiKeyMap, statusMap, serviceIdMap,
+           dateMap, browserMap);
+
+    public LogAnalyzer(String ipFilePath, String opFilePath) throws IOException, ParseException {
+        this.logReader = new LogReader(ipFilePath);
+        this.logWriter = new LogWriter(opFilePath);
     }
 
-    public void readAllLog(LogParser<String> apiKeyMap, LogParser<Integer> statusMap,
-                           LogParser<String> serviceIdMap, LogParser<Date> dateMap,
-                           LogParser<String> browserMap) throws IOException, ParseException {
-        logReader.readAllLog(apiKeyMap, statusMap, serviceIdMap, dateMap, browserMap);
+    public void readAndParseLog() throws IOException, ParseException {
+        logParser.parseLog(logReader.readLog(new ArrayList<>(), 1000));
     }
 
-    public void mostApiKey(LogParser<String> apiKeyMap) throws IOException {
+    public void analyzeLogData() throws IOException {
+        mostApiKey(apiKeyMap);
+        codeStatus(statusMap);
+        serviceId(serviceIdMap);
+        peakTime(dateMap);
+        browserType(browserMap);
+    }
+
+    public void mostApiKey(LogData<String> apiKeyMap) throws IOException {
         int maxValue = 0;
         String maxKey = null;
         for (Map.Entry<String, Integer> entry : apiKeyMap.getLogParserMap().entrySet()) {
@@ -33,7 +48,7 @@ public class LogService {
         logWriter.writeMostApiKey(maxKey);
     }
 
-    public void codeStatus(LogParser<Integer> statusMap) throws IOException {
+    public void codeStatus(LogData<Integer> statusMap) throws IOException {
         List<Map.Entry<Integer, Integer>> codes = statusMap.getLogParserMap().entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByKey()) // 키 기준으로 정렬
@@ -41,7 +56,7 @@ public class LogService {
         logWriter.writeCodeStatus(codes);
     }
 
-    public void serviceId(LogParser<String> serviceIdMap) throws IOException {
+    public void serviceId(LogData<String> serviceIdMap) throws IOException {
         // 값(value) 기준으로 정렬하고 상위 3개 항목 추출
         List<Map.Entry<String, Integer>> topThree = serviceIdMap.getLogParserMap().entrySet()
                 .stream()  // Map의 엔트리를 Stream으로 변환
@@ -51,7 +66,7 @@ public class LogService {
         logWriter.writeServiceId(topThree);
     }
 
-    public void peakTime(LogParser<Date> dateMap) throws IOException {
+    public void peakTime(LogData<Date> dateMap) throws IOException {
         int maxValue = 0;
         Date maxKey = null;
         for (Map.Entry<Date, Integer> entry : dateMap.getLogParserMap().entrySet()) {
@@ -65,7 +80,7 @@ public class LogService {
         logWriter.writePeakTime(peakTime);
     }
 
-    public void browserType(LogParser<String> browserMap) throws IOException {
+    public void browserType(LogData<String> browserMap) throws IOException {
         // 전체 사용 횟수 계산
         int totalUsage = browserMap.getLogParserMap().values().stream().mapToInt(Integer::intValue).sum();
 
