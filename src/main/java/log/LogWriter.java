@@ -1,5 +1,8 @@
 package log;
 
+import dataType.ServiceIdType;
+import dataType.StatusType;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,23 +25,23 @@ public class LogWriter {
         fw.newLine();
     }
 
-    public void writeCodeStatus(List<Map.Entry<Integer, Integer>> codeStatus) throws IOException {
+    public void writeCodeStatus(List<Map.Entry<StatusType, Integer>> codeStatus) throws IOException {
         fw.write("상태코드 별 횟수");
         fw.newLine();
         fw.newLine();
-        for (Map.Entry<Integer, Integer> entry : codeStatus) {
-            fw.write(entry.getKey() + " : " + entry.getValue());
+        for (Map.Entry<StatusType, Integer> entry : codeStatus) {
+            fw.write(entry.getKey().getCode() + " : " + entry.getValue());
             fw.newLine();
         }
         fw.newLine();
     }
 
-    public void writeServiceId(List<Map.Entry<String, Integer>> topThree) throws IOException {
+    public void writeServiceId(List<Map.Entry<ServiceIdType, Integer>> topThree) throws IOException {
         fw.write("상위 3개의 API ServiceID와 각각의 요청 수");
         fw.newLine();
         fw.newLine();
-        for (Map.Entry<String, Integer> entry : topThree) {
-            fw.write(entry.getKey() + " : " + entry.getValue());
+        for (Map.Entry<ServiceIdType, Integer> entry : topThree) {
+            fw.write(entry.getKey().getValue() + " : " + entry.getValue());
             fw.newLine();
         }
         fw.newLine();

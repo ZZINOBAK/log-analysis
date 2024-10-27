@@ -1,8 +1,11 @@
 package log;
 
+import dataType.ServiceIdType;
+import dataType.StatusType;
+
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -11,20 +14,19 @@ public class LogAnalyzer {
     private final LogWriter logWriter;
 
     private final LogData<String> apiKeyMap = new LogData<>();
-    private final LogData<Integer> statusMap = new LogData<>();
-    private final LogData<String> serviceIdMap = new LogData<>();
-    private final LogData<Date> dateMap = new LogData<>();
+    private final LogData<StatusType> statusMap = new LogData<>();
+    private final LogData<ServiceIdType> serviceIdMap = new LogData<>();
+    private final LogData<LocalDateTime> dateMap = new LogData<>();
     private final LogData<String> browserMap = new LogData<>();
 
-    private final LogParser logParser = new LogParser(apiKeyMap, statusMap, serviceIdMap,
-            dateMap, browserMap);
+    private final LogParser logParser = new LogParser(apiKeyMap, statusMap, serviceIdMap, dateMap, browserMap);
 
     public LogAnalyzer(String ipFilePath, String opFilePath) throws IOException {
         this.logReader = new LogReader(ipFilePath);
         this.logWriter = new LogWriter(opFilePath);
     }
 
-    public void readAndParseLog() throws IOException, ParseException {
+    public void readAndParseLog() throws IOException {
         logParser.parseLog(logReader.readLog(new ArrayList<>(), 1000));
     }
 
@@ -48,17 +50,17 @@ public class LogAnalyzer {
         logWriter.writeMostApiKey(maxKey);
     }
 
-    public void codeStatus(LogData<Integer> statusMap) throws IOException {
-        List<Map.Entry<Integer, Integer>> codes = statusMap.getLogParserMap().entrySet()
+    public void codeStatus(LogData<StatusType> statusMap) throws IOException {
+        List<Map.Entry<StatusType, Integer>> codes = statusMap.getLogParserMap().entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByKey()) // 키 기준으로 정렬
                 .collect(Collectors.toList()); // List로 변환
         logWriter.writeCodeStatus(codes);
     }
 
-    public void serviceId(LogData<String> serviceIdMap) throws IOException {
+    public void serviceId(LogData<ServiceIdType> serviceIdMap) throws IOException {
         // 값(value) 기준으로 정렬하고 상위 3개 항목 추출
-        List<Map.Entry<String, Integer>> topThree = serviceIdMap.getLogParserMap().entrySet()
+        List<Map.Entry<ServiceIdType, Integer>> topThree = serviceIdMap.getLogParserMap().entrySet()
                 .stream()  // Map의 엔트리를 Stream으로 변환
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())) // 값 기준 내림차순 정렬
                 .limit(3) // 상위 3개만 가져오기
@@ -66,17 +68,21 @@ public class LogAnalyzer {
         logWriter.writeServiceId(topThree);
     }
 
-    public void peakTime(LogData<Date> dateMap) throws IOException {
+    public void peakTime(LogData<LocalDateTime> dateMap) throws IOException {
         int maxValue = 0;
-        Date maxKey = null;
-        for (Map.Entry<Date, Integer> entry : dateMap.getLogParserMap().entrySet()) {
+        LocalDateTime maxKey = null;
+        for (Map.Entry<LocalDateTime, Integer> entry : dateMap.getLogParserMap().entrySet()) {
             if (entry.getValue() > maxValue) {
                 maxValue = entry.getValue();
                 maxKey = entry.getKey();
             }
         }
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String peakTime = formatter.format(maxKey);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String peakTime = null;
+        if (maxKey != null) {
+            peakTime = maxKey.format(formatter);
+        }
         logWriter.writePeakTime(peakTime);
     }
 

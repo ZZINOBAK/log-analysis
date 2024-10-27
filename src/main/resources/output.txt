@@ -11,7 +11,7 @@
 상위 3개의 API ServiceID와 각각의 요청 수
 
 knowledge : 834
-news : 833
+unknown : 833
 blog : 826
 
 피크 시간대
