@@ -1,40 +1,27 @@
 package log;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 
 public class LogReader {
     private final BufferedReader br;
 
-    public LogReader(BufferedReader br) {
-        this.br = br;
+    public LogReader(String ipFilePath) throws FileNotFoundException {
+        this.br = new BufferedReader(new FileReader(ipFilePath));
     }
 
-    public void readAllLog(LogVO logVO) throws IOException, ParseException {
+    public List<String> readLog(List<String> logs, int chunk) throws IOException {
         String line;
-        while ((line = br.readLine()) != null) {
-            // 구분자로 로그를 나누기
-            String[] split = line.split("]\\[");
-
-            logVO.putStatusMap(Integer.parseInt(split[0].replace("[", "").trim()));
-
-            String url = split[1];
-            Pattern pattern = Pattern.compile("search/([^?]*)\\?apikey=([^&]*)");
-            Matcher matcher = pattern.matcher(url);
-            if (matcher.find()) {
-                logVO.putServiceIdMap(matcher.group(1));
-                logVO.putApiKeyMap(matcher.group(2));
+        for (int i = 1; i <= chunk; i++) {
+            line = br.readLine();  // 한 줄 읽기
+            if (line == null) {  // 더 이상 읽을 줄이 없으면 종료
+                break;
             }
-            logVO.putBrowserMap(split[2].replace("]", "").trim());
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            logVO.putDateMap(dateFormat.parse(split[3].replace("]", "").trim()));
+            logs.add(line);  // 읽은 줄을 리스트에 추가
         }
-
+        return logs;
     }
-
 }

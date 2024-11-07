@@ -1,27 +1,21 @@
-import log.LogReader;
-import log.LogService;
-import log.LogVO;
-import log.LogWriter;
+import log.LogAnalyzer;
 
-import java.io.*;
+import java.io.IOException;
 import java.text.ParseException;
 
 public class Main {
     public static void main(String[] args) throws IOException, ParseException {
-        LogService logService = new LogService
-                (new LogReader(new BufferedReader(new FileReader("CDGLogAnalysis/src/main/resources/input.txt"))),
-                        new LogWriter(new BufferedWriter(new FileWriter("CDGLogAnalysis/src/main/resources/output.txt"))),
-                        new LogVO());
+        LogAnalyzer logAnalyzer = new LogAnalyzer("src/main/resources/input.txt",
+                "src/main/resources/output.txt");
 
-        logService.readAllLog();
+        int logAmount = 5;
+        while (logAmount > 0) {
+            logAnalyzer.readAndParseLog();
+            logAmount--;
+        }
+        logAnalyzer.analyzeLogData();
 
-        logService.mostApiKey();
-        logService.codeStatus();
-        logService.serviceId();
-        logService.peakTime();
-        logService.browserType();
-
-        logService.close();
+        logAnalyzer.close();
 
     }
 }
