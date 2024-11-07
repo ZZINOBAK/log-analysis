@@ -26,7 +26,7 @@ public class LogParser {
     }
 
     public void parseLog(List<String> logs) {
-        logs.stream() // logs를 Stream으로 변환
+        logs.stream()
                 .filter(Objects::nonNull) // null이 아닌 로그만 필터링
                 .map(log -> log.split("]\\[")) // 로그를 구분자로 나누기
                 .forEach(split -> { // 각 split 배열에 대해 작업 수행
@@ -67,6 +67,7 @@ public class LogParser {
                     serviceIdMap.putLogParserMap(ServiceIdType.UNKNOWN);
                 }
             }
+
             // 쿼리 파라미터 분석
             if (queries != null && queries.contains("apikey")) {
                 String query = queries.split("&")[0].trim();
@@ -74,6 +75,7 @@ public class LogParser {
                     apiKeyMap.putLogParserMap(query.split("=")[1]);
                 }
             }
+
         }
     }
 

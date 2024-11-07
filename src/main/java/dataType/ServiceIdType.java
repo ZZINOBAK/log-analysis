@@ -6,6 +6,7 @@ public enum ServiceIdType {
     VCLIP("vclip"),
     BOOK("book"),
     IMAGE("image"),
+    NEWS("news"),
     UNKNOWN("unknown");
 
     private final String value; // 실제 소문자 값을 저장할 필드

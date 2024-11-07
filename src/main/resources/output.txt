@@ -5,13 +5,13 @@
 상태코드 별 횟수
 
 10 : 152
-200 : 4742
+200 : 4747
 404 : 101
 
 상위 3개의 API ServiceID와 각각의 요청 수
 
-knowledge : 834
-unknown : 833
+knowledge : 836
+news : 834
 blog : 826
 
 피크 시간대
