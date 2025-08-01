@@ -4,6 +4,8 @@ import dataType.ServiceIdType;
 import dataType.StatusType;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,7 +35,7 @@ public class LogParser {
                     putStatus(split);
                     try {
                         putApiKeyAndServiceId(split);
-                    } catch (MalformedURLException e) {
+                    } catch (MalformedURLException | URISyntaxException e) {
                         throw new RuntimeException(e);
                     }
                     putBrowserType(split);
@@ -50,8 +52,11 @@ public class LogParser {
         browserMap.putLogParserMap(split[2].replace("]", "").trim());
     }
 
-    private void putApiKeyAndServiceId(String[] split) throws MalformedURLException {
-        URL urlObj = new URL(split[1]);
+    private void putApiKeyAndServiceId(String[] split) throws MalformedURLException, URISyntaxException {
+        // URL을 URI로 먼저 파싱한 후, URL 객체로 변환
+        URI uri = new URI(split[1]);
+        URL urlObj = uri.toURL();  // URI에서 URL로 변환
+
         String paths = urlObj.getPath();
         String queries = urlObj.getQuery();
 
