@@ -14,18 +14,3 @@
 - Git
 
 ---
-
-## 📂 프로젝트 구조
-LogAnalysis/
-├── build.gradle
-├── settings.gradle
-├── gradle/
-├── src/
-│ └── main/
-│ └── java/
-│ └── log/
-│ ├── controller/
-│ ├── model/
-│ ├── service/
-│ └── view/
-└── README.md
